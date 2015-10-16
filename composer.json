@@ -1,0 +1,24 @@
+{
+	"name": "katoga/g-ads",
+	"type": "library",
+	"license": ["Apache-2.0"],
+	"authors": [
+		{
+			"name": "Vincent Tsao",
+			"role": "Developer of original library googleads-php-lib"
+		},
+		{
+			"name": "Katoga",
+			"email": "katoga.cz@hotmail.com",
+			"role": "Developer of G-Ads"
+		}
+	],
+	"require": {
+		"php": ">=5.3.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"GAds\\": "src/"
+		}
+	}
+}
