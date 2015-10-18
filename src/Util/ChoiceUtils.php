@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace GAds\Util;
 
 /**
- * A collection of utility methods for working with choices. Choices are objects which contain
+ * A collection of utility methods for working with choices.
+ * Choices are objects which contain
  * many fields, but any time only one of which will contain a value.
  *
  * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
@@ -26,24 +26,25 @@ namespace GAds\Util;
 class ChoiceUtils
 {
 
-  /**
-   * The ChoiceUtils class is not meant to have any instances.
-   */
-  private function __construct()
-  {}
+	/**
+	 * The ChoiceUtils class is not meant to have any instances.
+	 */
+	private function __construct()
+	{}
 
-  /**
-   * Gets the value of a choice object.
-   * @param object $choice the choice to get the value of.
-   * @return mixed the value of the choice.
-   */
-  public static function GetValue($choice)
-  {
-    foreach (get_object_vars($choice) as $name => $value) {
-      if (isset($value)) {
-        return $value;
-      }
-    }
-    return null;
-  }
+	/**
+	 * Gets the value of a choice object.
+	 *
+	 * @param object $choice the choice to get the value of.
+	 * @return mixed the value of the choice.
+	 */
+	public static function GetValue($choice)
+	{
+		foreach (get_object_vars($choice) as $name => $value) {
+			if (isset($value)) {
+				return $value;
+			}
+		}
+		return null;
+	}
 }

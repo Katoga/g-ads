@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace GAds\Util;
 
 /**
@@ -22,10 +21,11 @@ namespace GAds\Util;
  *
  * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
-class OAuth2Exception extends Exception
+class OAuth2Exception extends \Exception
 {
-  public function __construct($message, $code = null)
-  {
-    parent::__construct($message, $code);
-  }
+
+	public function __construct($message, $code = null)
+	{
+		parent::__construct($message, $code);
+	}
 }

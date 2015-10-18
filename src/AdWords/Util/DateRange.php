@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace GAds\AdWords\Util;
 
 /**
@@ -25,39 +24,42 @@ namespace GAds\AdWords\Util;
  */
 class DateRange
 {
-  /**
-   * @var string
-   */
-  public $min;
 
-  /**
-   * @var string
-   */
-  public $max;
+	/**
+	 *
+	 * @var string
+	 */
+	public $min;
 
-  /**
-   * Gets the namesapce of this class
-   *
-   * @return the namespace of this class
-   */
-  public function getNamespace()
-  {
-    return "";
-  }
+	/**
+	 *
+	 * @var string
+	 */
+	public $max;
 
-  /**
-   * Gets the xsi:type name of this class
-   *
-   * @return the xsi:type name of this class
-   */
-  public function getXsiTypeName()
-  {
-    return "DateRange";
-  }
+	/**
+	 * Gets the namesapce of this class
+	 *
+	 * @return the namespace of this class
+	 */
+	public function getNamespace()
+	{
+		return "";
+	}
 
-  public function __construct($min = null, $max = null)
-  {
-    $this->min = $min;
-    $this->max = $max;
-  }
+	/**
+	 * Gets the xsi:type name of this class
+	 *
+	 * @return the xsi:type name of this class
+	 */
+	public function getXsiTypeName()
+	{
+		return "DateRange";
+	}
+
+	public function __construct($min = null, $max = null)
+	{
+		$this->min = $min;
+		$this->max = $max;
+	}
 }

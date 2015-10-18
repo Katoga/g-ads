@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace GAds\AdWords\Util;
 
 /**
@@ -22,19 +21,20 @@ namespace GAds\AdWords\Util;
  *
  * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
-class ReportDownloadException extends Exception
+class ReportDownloadException extends \Exception
 {
-  /**
-   * Constructor for ReportDownloadException.
-   *
-   * @param string $error an optional error message
-   * @param string $httpCode an optional HTTP status code of the response
-   */
-  public function __construct($error = null, $httpCode = null)
-  {
-    if (empty($error)) {
-      $error = 'Report download failed with status code: ' . $httpCode;
-    }
-    parent::__construct($error, $httpCode);
-  }
+
+	/**
+	 * Constructor for ReportDownloadException.
+	 *
+	 * @param string $error an optional error message
+	 * @param string $httpCode an optional HTTP status code of the response
+	 */
+	public function __construct($error = null, $httpCode = null)
+	{
+		if (empty($error)) {
+			$error = 'Report download failed with status code: ' . $httpCode;
+		}
+		parent::__construct($error, $httpCode);
+	}
 }

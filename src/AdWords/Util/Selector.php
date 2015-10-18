@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace GAds\AdWords\Util;
 
 /**
@@ -24,57 +23,63 @@ namespace GAds\AdWords\Util;
  */
 class Selector
 {
-  /**
-   * @var string[]
-   */
-  public $fields;
 
-  /**
-   * @var Predicate[]
-   */
-  public $predicates;
+	/**
+	 *
+	 * @var string[]
+	 */
+	public $fields;
 
-  /**
-   * @var DateRange
-   */
-  public $dateRange;
+	/**
+	 *
+	 * @var Predicate[]
+	 */
+	public $predicates;
 
-  /**
-   * @var OrderBy[]
-   */
-  public $ordering;
+	/**
+	 *
+	 * @var DateRange
+	 */
+	public $dateRange;
 
-  /**
-   * @var Paging
-   */
-  public $paging;
+	/**
+	 *
+	 * @var OrderBy[]
+	 */
+	public $ordering;
 
-  /**
-   * Gets the namesapce of this class
-   *
-   * @return the namespace of this class
-   */
-  public function getNamespace()
-  {
-    return "";
-  }
+	/**
+	 *
+	 * @var Paging
+	 */
+	public $paging;
 
-  /**
-   * Gets the xsi:type name of this class
-   *
-   * @return the xsi:type name of this class
-   */
-  public function getXsiTypeName()
-  {
-    return "Selector";
-  }
+	/**
+	 * Gets the namesapce of this class
+	 *
+	 * @return the namespace of this class
+	 */
+	public function getNamespace()
+	{
+		return "";
+	}
 
-  public function __construct($fields = null, $predicates = null, $dateRange = null, $ordering = null, $paging = null)
-  {
-    $this->fields = $fields;
-    $this->predicates = $predicates;
-    $this->dateRange = $dateRange;
-    $this->ordering = $ordering;
-    $this->paging = $paging;
-  }
+	/**
+	 * Gets the xsi:type name of this class
+	 *
+	 * @return the xsi:type name of this class
+	 */
+	public function getXsiTypeName()
+	{
+		return "Selector";
+	}
+
+	public function __construct($fields = null, $predicates = null, $dateRange = null, $ordering = null, $paging = null)
+	{
+		$this->fields = $fields;
+		$this->predicates = $predicates;
+		$this->dateRange = $dateRange;
+		$this->ordering = $ordering;
+		$this->paging = $paging;
+	}
 }

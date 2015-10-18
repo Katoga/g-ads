@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace GAds\AdWords\Lib;
 
 /**
@@ -25,24 +24,24 @@ namespace GAds\AdWords\Lib;
 class AdWordsConstants
 {
 
-  /**
-   * Recommended page size for most services.
-   *
-   * @var int
-   */
-  const RECOMMENDED_PAGE_SIZE = 500;
+	/**
+	 * Recommended page size for most services.
+	 *
+	 * @var int
+	 */
+	const RECOMMENDED_PAGE_SIZE = 500;
 
-  /**
-   * The number of micros in a dollar (or equivalent curreny unit).
-   *
-   * @var int
-   */
-  const MICROS_PER_DOLLAR = 1000000;
+	/**
+	 * The number of micros in a dollar (or equivalent curreny unit).
+	 *
+	 * @var int
+	 */
+	const MICROS_PER_DOLLAR = 1000000;
 
-  /**
-   * The number of micro degrees in a degree.
-   *
-   * @var int
-   */
-  const MICRO_DEGREES_PER_DEGREE = 1000000;
+	/**
+	 * The number of micro degrees in a degree.
+	 *
+	 * @var int
+	 */
+	const MICRO_DEGREES_PER_DEGREE = 1000000;
 }

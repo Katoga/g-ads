@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace GAds\Lib;
 
 /**
@@ -22,39 +21,39 @@ namespace GAds\Lib;
  *
  * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
-class ValidationException extends Exception
+class ValidationException extends \Exception
 {
 
-  const EXCEPTION_FORMAT = 'Validation failed for [%s] with value [%s]: %s';
+	const EXCEPTION_FORMAT = 'Validation failed for [%s] with value [%s]: %s';
 
-  /**
-   * The trigger for the validation exception.
-   *
-   * @var string
-   */
-  protected $trigger;
+	/**
+	 * The trigger for the validation exception.
+	 *
+	 * @var string
+	 */
+	protected $trigger;
 
-  /**
-   * Constructor for ValidationException where the exception will appear
-   * as "Validation failed for [$trigger] with value [$value]: $message".
-   *
-   * @param string $trigger the trigger for the validation error
-   * @param string $value the value for the trigger
-   * @param string $message the message representing the error in validation
-   */
-  public function __construct($trigger, $value, $message)
-  {
-    $this->trigger = $trigger;
-    parent::__construct(sprintf(self::EXCEPTION_FORMAT, $trigger, $value, $message));
-  }
+	/**
+	 * Constructor for ValidationException where the exception will appear
+	 * as "Validation failed for [$trigger] with value [$value]: $message".
+	 *
+	 * @param string $trigger the trigger for the validation error
+	 * @param string $value the value for the trigger
+	 * @param string $message the message representing the error in validation
+	 */
+	public function __construct($trigger, $value, $message)
+	{
+		$this->trigger = $trigger;
+		parent::__construct(sprintf(self::EXCEPTION_FORMAT, $trigger, $value, $message));
+	}
 
-  /**
-   * Get the trigger for the validation error.
-   *
-   * @return string the trigger for the validation error.
-   */
-  public function GetTrigger()
-  {
-    return $this->trigger;
-  }
+	/**
+	 * Get the trigger for the validation error.
+	 *
+	 * @return string the trigger for the validation error.
+	 */
+	public function GetTrigger()
+	{
+		return $this->trigger;
+	}
 }

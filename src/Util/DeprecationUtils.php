@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace GAds\Util;
 
 use GAds\Lib\ServiceException;
@@ -27,46 +26,47 @@ use GAds\Lib\ServiceException;
 abstract class DeprecationUtils
 {
 
-  /**
-   * Checks to see if skipReportHeader, skipColumnHeader, skipReportSummary
-   * or includeZeroImpressions can be used for AdWords reports.
-   * Throws an error if it cannot be used.
-   *
-   * @param string $header skipReportHeader, skipColumnHeader, skipReportSummary, includeZeroImpressions
-   * @param string $minimumVersion the minimum API version that supports skipReportHeader, skipColumnHeader, skipReportSummary, includeZeroImpressions
-   * @param string $requestedVersion the API version being used
-   * @throws ServiceException if the requested version does not support skipReportHeader, skipColumnHeader, skipReportSummary, includeZeroImpressions
-   */
-  public static function CheckUsingReportHeadersWithUnsupportedVersion($header, $minimumVersion, $requestedVersion)
-  {
-    if ($requestedVersion < $minimumVersion) {
-      throw new ServiceException(sprintf("%s is not supported in version %s.", $header, $requestedVersion));
-    }
-  }
+	/**
+	 * Checks to see if skipReportHeader, skipColumnHeader, skipReportSummary
+	 * or includeZeroImpressions can be used for AdWords reports.
+	 * Throws an error if it cannot be used.
+	 *
+	 * @param string $header skipReportHeader, skipColumnHeader, skipReportSummary, includeZeroImpressions
+	 * @param string $minimumVersion the minimum API version that supports skipReportHeader, skipColumnHeader, skipReportSummary, includeZeroImpressions
+	 * @param string $requestedVersion the API version being used
+	 * @throws ServiceException if the requested version does not support skipReportHeader, skipColumnHeader, skipReportSummary, includeZeroImpressions
+	 */
+	public static function CheckUsingReportHeadersWithUnsupportedVersion($header, $minimumVersion, $requestedVersion)
+	{
+		if ($requestedVersion < $minimumVersion) {
+			throw new ServiceException(sprintf("%s is not supported in version %s.", $header, $requestedVersion));
+		}
+	}
 
-  /**
-   * Logs an error message indicating that the specified method is deprecated.
-   *
-   * @param string $methodName the name of the deprecated method
-   * @param string $moreInfoLink an optional link to a URL with more information
-   */
-  public static function LogDeprecatedMethodUsage($methodName, $moreInfoLink = null)
-  {
-    $message = sprintf("The method '%s' is deprecated.", $methodName);
-    if (isset($moreInfoLink)) {
-      $message .= sprintf(" For more information, please see '%s'", $moreInfoLink);
-    }
-    self::Log($message, Logger::$ERROR);
-  }
+	/**
+	 * Logs an error message indicating that the specified method is deprecated.
+	 *
+	 * @param string $methodName the name of the deprecated method
+	 * @param string $moreInfoLink an optional link to a URL with more information
+	 */
+	public static function LogDeprecatedMethodUsage($methodName, $moreInfoLink = null)
+	{
+		$message = sprintf("The method '%s' is deprecated.", $methodName);
+		if (isset($moreInfoLink)) {
+			$message .= sprintf(" For more information, please see '%s'", $moreInfoLink);
+		}
+		self::Log($message, Logger::$ERROR);
+	}
 
-  /**
-   * Log messages to the relevant message sources.
-   *
-   * @param string $message is the message to log
-   * @param string $level is the message level to log
-   */
-  protected static function Log($message, $level = null) {
-    Logger::log(Logger::$SOAP_XML_LOG, $message, $level);
-    Logger::log(Logger::$REQUEST_INFO_LOG, $message, $level);
-  }
+	/**
+	 * Log messages to the relevant message sources.
+	 *
+	 * @param string $message is the message to log
+	 * @param string $level is the message level to log
+	 */
+	protected static function Log($message, $level = null)
+	{
+		Logger::log(Logger::$SOAP_XML_LOG, $message, $level);
+		Logger::log(Logger::$REQUEST_INFO_LOG, $message, $level);
+	}
 }

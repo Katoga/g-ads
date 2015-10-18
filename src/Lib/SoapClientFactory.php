@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace GAds\Lib;
 
 /**
@@ -25,221 +24,224 @@ namespace GAds\Lib;
 abstract class SoapClientFactory
 {
 
-  /**
-   * The minimum PHP version that can properly decode HTTP 1.1 chunked
-   * responses. We use 5.4.0 because some versions of 5.3.x work and some do
-   * not.
-   */
-  const MIN_VER_CHUNKED_HTTP11 = '5.4.0';
+	/**
+	 * The minimum PHP version that can properly decode HTTP 1.1 chunked
+	 * responses.
+	 * We use 5.4.0 because some versions of 5.3.x work and some do
+	 * not.
+	 */
+	const MIN_VER_CHUNKED_HTTP11 = '5.4.0';
 
-  private $user;
-  private $version;
-  private $server;
-  private $productName;
-  private $headerOverrides;
+	private $user;
 
-  private static $SERVER_REGEX = '/^\w*:\/\/[^\/]*/';
-  protected static $COMPRESSION_KIND;
+	private $version;
 
-  /**
-   * The constructor called by any sub-class.
-   *
-   * @param AdsUser $user the user which the client will use for credentials
-   * @param string $version the version to generate clients for
-   * @param string $server the server to generate clients for
-   * @param string $productName the product name (i.e. adwords)
-   */
-  protected function __construct(AdsUser $user, $version, $server, $productName, $headerOverrides = null)
-  {
-    $this->user = $user;
-    $this->version = $version;
-    $this->server = $server;
-    $this->productName = $productName;
-    $this->headerOverrides = $headerOverrides;
-  }
+	private $server;
 
-  /**
-   * Initiates a require_once for the service.
-   *
-   * @param string $serviceName the service to instantiate
-   */
-  abstract public function DoRequireOnce($serviceName);
+	private $productName;
 
-  /**
-   * Generates a SOAP client for the given service name. Generates a user level
-   * error if this instalation of PHP does not have the extension for SOAP
-   * installed.
-   *
-   * @param string $serviceName the name of the service to generate a client for
-   * @return AdsSoapClient an instantiated SOAP client
-   */
-  public function GenerateSoapClient($serviceName)
-  {
-    if (extension_loaded('soap')) {
-      $this->DoRequireOnce($serviceName);
-      $soapClient = $this->GenerateServiceClient($serviceName);
-      return $soapClient;
-    } else {
-      trigger_error('This client library requires the SOAP extension to be'
-          . ' activated. See http://php.net/manual/en/soap.installation.php for'
-          . ' details.', E_USER_ERROR);
-    }
-  }
+	private $headerOverrides;
 
-  /**
-   * Generates the SOAP service client without the proper headers set yet.
-   *
-   * @param string $serviceName the service to create a client for
-   * @return AdsSoapClient the SOAP service client
-   */
-  protected function GenerateServiceClient($serviceName)
-  {
-    $location = $this->GetServiceLocation($serviceName);
-    $wsdl = $location . '?wsdl';
-    $options = array(
-      'trace' => true,
-      'encoding' => 'utf-8',
-      'connection_timeout' => 0,
-      'features' => SOAP_SINGLE_ELEMENT_ARRAYS
-    );
-    $contextOptions = array();
+	private static $SERVER_REGEX = '/^\w*:\/\/[^\/]*/';
 
-    // Compression settings.
-    if ($this->GetAdsUser()->IsSoapCompressionEnabled()) {
-      $options['compression'] = SOAP_COMPRESSION_ACCEPT |
-          self::GetCompressionKind() |
-          $this->GetAdsUser()->GetSoapCompressionLevel();
-      // The User-Agent HTTP header must contain the string 'gzip'.
-      $options['user_agent'] = 'PHP-SOAP/'. phpversion() . ', gzip';
-    }
+	protected static $COMPRESSION_KIND;
 
-    // WSDL caching settings.
-    $options['cache_wsdl'] = $this->GetAdsUser()->GetWsdlCacheType();
+	/**
+	 * The constructor called by any sub-class.
+	 *
+	 * @param AdsUser $user the user which the client will use for credentials
+	 * @param string $version the version to generate clients for
+	 * @param string $server the server to generate clients for
+	 * @param string $productName the product name (i.e. adwords)
+	 */
+	protected function __construct(AdsUser $user, $version, $server, $productName, $headerOverrides = null)
+	{
+		$this->user = $user;
+		$this->version = $version;
+		$this->server = $server;
+		$this->productName = $productName;
+		$this->headerOverrides = $headerOverrides;
+	}
 
-    // Check to see if the default version of the HTTP protocol to use should be
-    // overriden depending on the user's environment.
-    if ($this->GetAdsUser()->GetForceHttpVersion() !== null) {
-      $contextOptions['http']['protocol_version'] = $this->GetAdsUser()->GetForceHttpVersion();
-    } elseif (version_compare(PHP_VERSION, self::MIN_VER_CHUNKED_HTTP11) < '<') {
-      $contextOptions['http']['protocol_version'] = 1.0;
-    }
+	/**
+	 * Initiates a require_once for the service.
+	 *
+	 * @param string $serviceName the service to instantiate
+	 */
+	abstract public function DoRequireOnce($serviceName);
 
-    // Proxy settings.
-    if (defined('HTTP_PROXY_HOST') && HTTP_PROXY_HOST != '') {
-      $options['proxy_host'] = HTTP_PROXY_HOST;
-    }
-    if (defined('HTTP_PROXY_PORT') && HTTP_PROXY_PORT != '') {
-      $options['proxy_port'] = HTTP_PROXY_PORT;
-    }
-    if (defined('HTTP_PROXY_USER') && HTTP_PROXY_USER != '') {
-      $options['proxy_login'] = HTTP_PROXY_USER;
-    }
-    if (defined('HTTP_PROXY_PASSWORD') && HTTP_PROXY_PASSWORD != '') {
-      $options['proxy_password'] = HTTP_PROXY_PASSWORD;
-    }
+	/**
+	 * Generates a SOAP client for the given service name.
+	 * Generates a user level error if this instalation of PHP does not have the extension for SOAP
+	 * installed.
+	 *
+	 * @param string $serviceName the name of the service to generate a client for
+	 * @return AdsSoapClient an instantiated SOAP client
+	 */
+	public function GenerateSoapClient($serviceName)
+	{
+		if (extension_loaded('soap')) {
+			$this->DoRequireOnce($serviceName);
+			$soapClient = $this->GenerateServiceClient($serviceName);
+			return $soapClient;
+		} else {
+			trigger_error('This client library requires the SOAP extension to be' . ' activated. See http://php.net/manual/en/soap.installation.php for' . ' details.', E_USER_ERROR);
+		}
+	}
 
-    // SSL settings.
-    if (defined('SSL_VERIFY_PEER') && SSL_VERIFY_PEER != '') {
-      $contextOptions['ssl']['verify_peer'] = SSL_VERIFY_PEER;
-    }
-    if (defined('SSL_VERIFY_HOST') && SSL_VERIFY_HOST) {
-      $contextOptions['ssl']['CN_match'] = parse_url($location, PHP_URL_HOST);
-    }
-    if (defined('SSL_CA_PATH') && SSL_CA_PATH != '') {
-      $contextOptions['ssl']['capath'] = SSL_CA_PATH;
-    }
-    if (defined('SSL_CA_FILE') && SSL_CA_FILE != '') {
-      $contextOptions['ssl']['cafile'] = SSL_CA_FILE;
-    }
+	/**
+	 * Generates the SOAP service client without the proper headers set yet.
+	 *
+	 * @param string $serviceName the service to create a client for
+	 * @return AdsSoapClient the SOAP service client
+	 */
+	protected function GenerateServiceClient($serviceName)
+	{
+		$location = $this->GetServiceLocation($serviceName);
+		$wsdl = $location . '?wsdl';
+		$options = array(
+			'trace' => true,
+			'encoding' => 'utf-8',
+			'connection_timeout' => 0,
+			'features' => SOAP_SINGLE_ELEMENT_ARRAYS
+		);
+		$contextOptions = array();
 
-    $options['stream_context'] = stream_context_create($contextOptions);
+		// Compression settings.
+		if ($this->GetAdsUser()->IsSoapCompressionEnabled()) {
+			$options['compression'] = SOAP_COMPRESSION_ACCEPT | self::GetCompressionKind() | $this->GetAdsUser()->GetSoapCompressionLevel();
+			// The User-Agent HTTP header must contain the string 'gzip'.
+			$options['user_agent'] = 'PHP-SOAP/' . phpversion() . ', gzip';
+		}
 
-    $soapClient = new $serviceName($wsdl, $options, $this->GetAdsUser());
-    $soapClient->__setLocation($location);
+		// WSDL caching settings.
+		$options['cache_wsdl'] = $this->GetAdsUser()->GetWsdlCacheType();
 
-    // Copy headers from user.
-    foreach($this->GetAdsUser()->GetHeaderNames() as $key) {
-      $soapClient->SetHeaderValue($key, $this->GetAdsUser()->GetHeaderValue($key));
-    }
+		// Check to see if the default version of the HTTP protocol to use should be
+		// overriden depending on the user's environment.
+		if ($this->GetAdsUser()->GetForceHttpVersion() !== null) {
+			$contextOptions['http']['protocol_version'] = $this->GetAdsUser()->GetForceHttpVersion();
+		} elseif (version_compare(PHP_VERSION, self::MIN_VER_CHUNKED_HTTP11) < '<') {
+			$contextOptions['http']['protocol_version'] = 1.0;
+		}
 
-    // Copy headers from overrides.
-    if (isset($this->headerOverrides)) {
-      foreach($this->headerOverrides as $key => $value) {
-        $soapClient->SetHeaderValue($key, $value);
-      }
-    }
+		// Proxy settings.
+		if (defined('HTTP_PROXY_HOST') && HTTP_PROXY_HOST != '') {
+			$options['proxy_host'] = HTTP_PROXY_HOST;
+		}
+		if (defined('HTTP_PROXY_PORT') && HTTP_PROXY_PORT != '') {
+			$options['proxy_port'] = HTTP_PROXY_PORT;
+		}
+		if (defined('HTTP_PROXY_USER') && HTTP_PROXY_USER != '') {
+			$options['proxy_login'] = HTTP_PROXY_USER;
+		}
+		if (defined('HTTP_PROXY_PASSWORD') && HTTP_PROXY_PASSWORD != '') {
+			$options['proxy_password'] = HTTP_PROXY_PASSWORD;
+		}
 
-    return $soapClient;
-  }
+		// SSL settings.
+		if (defined('SSL_VERIFY_PEER') && SSL_VERIFY_PEER != '') {
+			$contextOptions['ssl']['verify_peer'] = SSL_VERIFY_PEER;
+		}
+		if (defined('SSL_VERIFY_HOST') && SSL_VERIFY_HOST) {
+			$contextOptions['ssl']['CN_match'] = parse_url($location, PHP_URL_HOST);
+		}
+		if (defined('SSL_CA_PATH') && SSL_CA_PATH != '') {
+			$contextOptions['ssl']['capath'] = SSL_CA_PATH;
+		}
+		if (defined('SSL_CA_FILE') && SSL_CA_FILE != '') {
+			$contextOptions['ssl']['cafile'] = SSL_CA_FILE;
+		}
 
-  /**
-   * Gets the end-point location of the service.
-   *
-   * @param string $serviceName the service to instantiate
-   * @return string the end-point location of the service.
-   */
-  protected function GetServiceLocation($serviceName)
-  {
-    $classVars = get_class_vars($serviceName);
-    $endpoint = $classVars['endpoint'];
-    return preg_replace(SoapClientFactory::$SERVER_REGEX, $this->GetServer(), $endpoint);
-  }
+		$options['stream_context'] = stream_context_create($contextOptions);
 
-  /**
-   * Gets the user associated with this factory.
-   *
-   * @return AdsUser the user associated with this factory
-   */
-  public function GetAdsUser()
-  {
-    return $this->user;
-  }
+		$soapClient = new $serviceName($wsdl, $options, $this->GetAdsUser());
+		$soapClient->__setLocation($location);
 
-  /**
-   * Gets the version associated with this factory.
-   *
-   * @return string the version associated with this factory
-   */
-  public function GetVersion()
-  {
-    return $this->version;
-  }
+		// Copy headers from user.
+		foreach ($this->GetAdsUser()->GetHeaderNames() as $key) {
+			$soapClient->SetHeaderValue($key, $this->GetAdsUser()
+				->GetHeaderValue($key));
+		}
 
-  /**
-   * Gets the server associated with this factory.
-   *
-   * @return string the server associated with this factory
-   */
-  public function GetServer()
-  {
-    return $this->server;
-  }
+		// Copy headers from overrides.
+		if (isset($this->headerOverrides)) {
+			foreach ($this->headerOverrides as $key => $value) {
+				$soapClient->SetHeaderValue($key, $value);
+			}
+		}
 
-  /**
-   * Gets the product name associated with this factory.
-   *
-   * @return string the product name associated with this factory
-   */
-  public function GetProductName()
-  {
-    return $this->productName;
-  }
+		return $soapClient;
+	}
 
-  /**
-   * Get the compression flag
-   *
-   * @return int Get the compression flag value
-   */
-  protected static function GetCompressionKind()
-  {
-    if (!isset(self::$COMPRESSION_KIND)) {
-      if (version_compare(PHP_VERSION, '5.4.0', '>=') && version_compare(PHP_VERSION, '5.4.4', '<')) {
-        self::$COMPRESSION_KIND = SOAP_COMPRESSION_DEFLATE;
-      } else {
-        self::$COMPRESSION_KIND = SOAP_COMPRESSION_GZIP;
-      }
-    }
+	/**
+	 * Gets the end-point location of the service.
+	 *
+	 * @param string $serviceName the service to instantiate
+	 * @return string the end-point location of the service.
+	 */
+	protected function GetServiceLocation($serviceName)
+	{
+		$classVars = get_class_vars($serviceName);
+		$endpoint = $classVars['endpoint'];
+		return preg_replace(SoapClientFactory::$SERVER_REGEX, $this->GetServer(), $endpoint);
+	}
 
-    return self::$COMPRESSION_KIND;
-  }
+	/**
+	 * Gets the user associated with this factory.
+	 *
+	 * @return AdsUser the user associated with this factory
+	 */
+	public function GetAdsUser()
+	{
+		return $this->user;
+	}
+
+	/**
+	 * Gets the version associated with this factory.
+	 *
+	 * @return string the version associated with this factory
+	 */
+	public function GetVersion()
+	{
+		return $this->version;
+	}
+
+	/**
+	 * Gets the server associated with this factory.
+	 *
+	 * @return string the server associated with this factory
+	 */
+	public function GetServer()
+	{
+		return $this->server;
+	}
+
+	/**
+	 * Gets the product name associated with this factory.
+	 *
+	 * @return string the product name associated with this factory
+	 */
+	public function GetProductName()
+	{
+		return $this->productName;
+	}
+
+	/**
+	 * Get the compression flag
+	 *
+	 * @return int Get the compression flag value
+	 */
+	protected static function GetCompressionKind()
+	{
+		if (!isset(self::$COMPRESSION_KIND)) {
+			if (version_compare(PHP_VERSION, '5.4.0', '>=') && version_compare(PHP_VERSION, '5.4.4', '<')) {
+				self::$COMPRESSION_KIND = SOAP_COMPRESSION_DEFLATE;
+			} else {
+				self::$COMPRESSION_KIND = SOAP_COMPRESSION_GZIP;
+			}
+		}
+
+		return self::$COMPRESSION_KIND;
+	}
 }

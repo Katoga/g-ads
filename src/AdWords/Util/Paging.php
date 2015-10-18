@@ -14,50 +14,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace GAds\AdWords\Util;
 
 /**
- * Specifies the page of results to return in the response. A page is specified by the result
+ * Specifies the page of results to return in the response.
+ * A page is specified by the result
  * position to start at and the maximum number of results to return.
  *
  * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 class Paging
 {
-  /**
-   * @var integer
-   */
-  public $startIndex;
 
-  /**
-   * @var integer
-   */
-  public $numberResults;
+	/**
+	 *
+	 * @var integer
+	 */
+	public $startIndex;
 
-  /**
-   * Gets the namesapce of this class
-   *
-   * @return the namespace of this class
-   */
-  public function getNamespace()
-  {
-    return "";
-  }
+	/**
+	 *
+	 * @var integer
+	 */
+	public $numberResults;
 
-  /**
-   * Gets the xsi:type name of this class
-   *
-   * @return the xsi:type name of this class
-   */
-  public function getXsiTypeName()
-  {
-    return "Paging";
-  }
+	/**
+	 * Gets the namesapce of this class
+	 *
+	 * @return the namespace of this class
+	 */
+	public function getNamespace()
+	{
+		return "";
+	}
 
-  public function __construct($startIndex = null, $numberResults = null)
-  {
-    $this->startIndex = $startIndex;
-    $this->numberResults = $numberResults;
-  }
+	/**
+	 * Gets the xsi:type name of this class
+	 *
+	 * @return the xsi:type name of this class
+	 */
+	public function getXsiTypeName()
+	{
+		return "Paging";
+	}
+
+	public function __construct($startIndex = null, $numberResults = null)
+	{
+		$this->startIndex = $startIndex;
+		$this->numberResults = $numberResults;
+	}
 }

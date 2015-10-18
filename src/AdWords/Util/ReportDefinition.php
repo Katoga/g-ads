@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace GAds\AdWords\Util;
 
 /**
@@ -24,81 +23,91 @@ namespace GAds\AdWords\Util;
  */
 class ReportDefinition
 {
-  /**
-   * @var integer
-   */
-  public $id;
 
-  /**
-   * @var Selector
-   */
-  public $selector;
+	/**
+	 *
+	 * @var integer
+	 */
+	public $id;
 
-  /**
-   * @var string
-   */
-  public $reportName;
+	/**
+	 *
+	 * @var Selector
+	 */
+	public $selector;
 
-  /**
-   * @var tnsReportDefinitionReportType
-   */
-  public $reportType;
+	/**
+	 *
+	 * @var string
+	 */
+	public $reportName;
 
-  /**
-   * @var boolean
-   */
-  public $hasAttachment;
+	/**
+	 *
+	 * @var tnsReportDefinitionReportType
+	 */
+	public $reportType;
 
-  /**
-   * @var tnsReportDefinitionDateRangeType
-   */
-  public $dateRangeType;
+	/**
+	 *
+	 * @var boolean
+	 */
+	public $hasAttachment;
 
-  /**
-   * @var tnsDownloadFormat
-   */
-  public $downloadFormat;
+	/**
+	 *
+	 * @var tnsReportDefinitionDateRangeType
+	 */
+	public $dateRangeType;
 
-  /**
-   * @var string
-   */
-  public $creationTime;
+	/**
+	 *
+	 * @var tnsDownloadFormat
+	 */
+	public $downloadFormat;
 
-  /**
-   * @var boolean
-   */
-  public $includeZeroImpressions;
+	/**
+	 *
+	 * @var string
+	 */
+	public $creationTime;
 
-  /**
-   * Gets the namesapce of this class
-   *
-   * @return the namespace of this class
-   */
-  public function getNamespace()
-  {
-    return "";
-  }
+	/**
+	 *
+	 * @var boolean
+	 */
+	public $includeZeroImpressions;
 
-  /**
-   * Gets the xsi:type name of this class
-   *
-   * @return the xsi:type name of this class
-   */
-  public function getXsiTypeName()
-  {
-    return "ReportDefinition";
-  }
+	/**
+	 * Gets the namesapce of this class
+	 *
+	 * @return the namespace of this class
+	 */
+	public function getNamespace()
+	{
+		return "";
+	}
 
-  public function __construct($id = null, $selector = null, $reportName = null, $reportType = null, $hasAttachment = null, $dateRangeType = null, $downloadFormat = null, $creationTime = null, $includeZeroImpressions = null)
-  {
-    $this->id = $id;
-    $this->selector = $selector;
-    $this->reportName = $reportName;
-    $this->reportType = $reportType;
-    $this->hasAttachment = $hasAttachment;
-    $this->dateRangeType = $dateRangeType;
-    $this->downloadFormat = $downloadFormat;
-    $this->creationTime = $creationTime;
-    $this->includeZeroImpressions = $includeZeroImpressions;
-  }
+	/**
+	 * Gets the xsi:type name of this class
+	 *
+	 * @return the xsi:type name of this class
+	 */
+	public function getXsiTypeName()
+	{
+		return "ReportDefinition";
+	}
+
+	public function __construct($id = null, $selector = null, $reportName = null, $reportType = null, $hasAttachment = null, $dateRangeType = null, $downloadFormat = null, $creationTime = null, $includeZeroImpressions = null)
+	{
+		$this->id = $id;
+		$this->selector = $selector;
+		$this->reportName = $reportName;
+		$this->reportType = $reportType;
+		$this->hasAttachment = $hasAttachment;
+		$this->dateRangeType = $dateRangeType;
+		$this->downloadFormat = $downloadFormat;
+		$this->creationTime = $creationTime;
+		$this->includeZeroImpressions = $includeZeroImpressions;
+	}
 }

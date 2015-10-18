@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace GAds\Util;
 
 /**
@@ -22,243 +21,252 @@ namespace GAds\Util;
  *
  * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
-abstract class OAuth2Handler {
+abstract class OAuth2Handler
+{
 
-  /**
-   * The refresh buffer of 60 seconds.
-   */
-  const REFRESH_BUFFER = 60;
-  const DEFAULT_REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob';
-  const AUTHORIZE_ENDPOINT = 'https://accounts.google.com/o/oauth2/auth';
-  const ACCESS_ENDPOINT = 'https://accounts.google.com/o/oauth2/token';
+	/**
+	 * The refresh buffer of 60 seconds.
+	 */
+	const REFRESH_BUFFER = 60;
 
-  private $server;
-  protected $scope;
+	const DEFAULT_REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob';
 
-  /**
-   * Constructor.
-   *
-   * @param string $server the auth server to make OAuth2 request against
-   */
-  public function __construct($server = null, $scope = null) {
-    $this->server = $server;
-    $this->scope = $scope;
-  }
+	const AUTHORIZE_ENDPOINT = 'https://accounts.google.com/o/oauth2/auth';
 
-  /**
-   * Gets the authorization URL to redirect to.
-   *
-   * @param array $credentials the credentials, including client_id
-   * @param string $redirectUri optional callback URL
-   * @param boolean $offline whether or not to request offline access (aka a refresh token), false by default
-   * @param array $params optional array of additional parameters to include in the URL
-   * @return string an authorization URL to redirect the user to
-   * @see https://developers.google.com/accounts/docs/OAuth2WebServer#formingtheurl
-   */
-  public function GetAuthorizationUrl(array $credentials, $redirectUri = null, $offline = null, array $params = null)
-  {
-    if (empty($credentials['client_id'])) {
-      throw new OAuth2Exception('client_id required.');
-    }
-    $params = is_null($params) ? array() : $params;
-    $redirectUri = is_null($redirectUri) ? self::DEFAULT_REDIRECT_URI : $redirectUri;
+	const ACCESS_ENDPOINT = 'https://accounts.google.com/o/oauth2/token';
 
-    $params = array_merge($params, array(
-      'response_type' => 'code',
-      'client_id' => $credentials['client_id'],
-      'redirect_uri' => $redirectUri,
-      'scope' => $this->scope,
-      'access_type' => $offline ? 'offline' : 'online'
-    ));
-    return $this->GetAuthorizeEndpoint($params);
-  }
+	private $server;
 
-  /**
-   * Gets the access token for an authorized request token.
-   *
-   * @param array $credentials the credentials, including client_id and client_secret
-   * @param string $code the authorization code returned in the response
-   * @param string $redirectUri optional callback URL
-   * @return array the credentials passed in plus access_token, expires_in, timestamp and optionally refresh_token if offline mode was requested
-   * @see https://developers.google.com/accounts/docs/OAuth2WebServer#handlingtheresponse
-   */
-  public abstract function GetAccessToken(array $credentials, $code, $redirectUri = null);
+	protected $scope;
 
-  /**
-   * Get the valid access token or the token if needed and possible.
-   *
-   * @param array $credentials the credentials, including client_id and client_secret
-   * @return array the credentials passed in plus any refreshed credentials if they were refreshed
-   */
-  public function GetOrRefreshAccessToken(array $credentials)
-  {
-      if ($this->ShouldRefreshAccessToken($credentials) && $this->CanRefreshAccessToken($credentials)) {
-        $credentials = $this->RefreshAccessToken($credentials);
-      }
-      return $credentials;
-  }
+	/**
+	 * Constructor.
+	 *
+	 * @param string $server the auth server to make OAuth2 request against
+	 */
+	public function __construct($server = null, $scope = null)
+	{
+		$this->server = $server;
+		$this->scope = $scope;
+	}
 
-  /**
-   * Determines if the access token should be refreshed.
-   *
-   * @param array $credentials the credentials, including client_id and client_secret
-   * @return boolean true if the Access Token should be refreshed
-   */
-  public function ShouldRefreshAccessToken(array $credentials)
-  {
-    return (!$this->IsAccessTokenValid($credentials) || $this->IsAccessTokenExpiring($credentials));
-  }
+	/**
+	 * Gets the authorization URL to redirect to.
+	 *
+	 * @param array $credentials the credentials, including client_id
+	 * @param string $redirectUri optional callback URL
+	 * @param boolean $offline whether or not to request offline access (aka a refresh token), false by default
+	 * @param array $params optional array of additional parameters to include in the URL
+	 * @return string an authorization URL to redirect the user to
+	 * @see https://developers.google.com/accounts/docs/OAuth2WebServer#formingtheurl
+	 */
+	public function GetAuthorizationUrl(array $credentials, $redirectUri = null, $offline = null, array $params = null)
+	{
+		if (empty($credentials['client_id'])) {
+			throw new OAuth2Exception('client_id required.');
+		}
+		$params = is_null($params) ? array() : $params;
+		$redirectUri = is_null($redirectUri) ? self::DEFAULT_REDIRECT_URI : $redirectUri;
 
-  /**
-   * Determines if the access token is still valid. If expiry information isn't
-   * available then this function will assume it is.
-   *
-   * @param array $credentials the credentials, including access_token, timestamp and expires_in
-   * @return boolean true if the access token is valid or if expiring information isn't available
-   */
-  public function IsAccessTokenValid(array $credentials)
-  {
-    if (empty($credentials['access_token'])) {
-      return false;
-    }
-    $expiry = $this->GetExpiryTimestamp($credentials);
-    if ($expiry) {
-      // Test if expiry hasn't passed.
-      return $expiry > time();
-    }
+		$params = array_merge($params, array(
+			'response_type' => 'code',
+			'client_id' => $credentials['client_id'],
+			'redirect_uri' => $redirectUri,
+			'scope' => $this->scope,
+			'access_type' => $offline ? 'offline' : 'online'
+		));
+		return $this->GetAuthorizeEndpoint($params);
+	}
 
-    // No expiry information, assume valid.
-    return true;
-  }
+	/**
+	 * Gets the access token for an authorized request token.
+	 *
+	 * @param array $credentials the credentials, including client_id and client_secret
+	 * @param string $code the authorization code returned in the response
+	 * @param string $redirectUri optional callback URL
+	 * @return array the credentials passed in plus access_token, expires_in, timestamp and optionally refresh_token if offline mode was requested
+	 * @see https://developers.google.com/accounts/docs/OAuth2WebServer#handlingtheresponse
+	 */
+	public abstract function GetAccessToken(array $credentials, $code, $redirectUri = null);
 
-  /**
-   * Tests if the access token is about to expire or has expired.
-   *
-   * @param array $credentials the credentials, including access_token, timestamp and expires_in
-   * @return boolean true if the token has expired
-   **/
-  public function IsAccessTokenExpiring(array $credentials)
-  {
-    $expiry = $this->GetExpiryTimestamp($credentials);
-    if ($expiry) {
-      // Subtract the refresh buffer.
-      $expiry -= self::REFRESH_BUFFER;
+	/**
+	 * Get the valid access token or the token if needed and possible.
+	 *
+	 * @param array $credentials the credentials, including client_id and client_secret
+	 * @return array the credentials passed in plus any refreshed credentials if they were refreshed
+	 */
+	public function GetOrRefreshAccessToken(array $credentials)
+	{
+		if ($this->ShouldRefreshAccessToken($credentials) && $this->CanRefreshAccessToken($credentials)) {
+			$credentials = $this->RefreshAccessToken($credentials);
+		}
+		return $credentials;
+	}
 
-      // Test if expiry has passed.
-      return $expiry < time();
-    }
+	/**
+	 * Determines if the access token should be refreshed.
+	 *
+	 * @param array $credentials the credentials, including client_id and client_secret
+	 * @return boolean true if the Access Token should be refreshed
+	 */
+	public function ShouldRefreshAccessToken(array $credentials)
+	{
+		return (!$this->IsAccessTokenValid($credentials) || $this->IsAccessTokenExpiring($credentials));
+	}
 
-    return false;
-  }
+	/**
+	 * Determines if the access token is still valid.
+	 * If expiry information isn't available then this function will assume it is.
+	 *
+	 * @param array $credentials the credentials, including access_token, timestamp and expires_in
+	 * @return boolean true if the access token is valid or if expiring information isn't available
+	 */
+	public function IsAccessTokenValid(array $credentials)
+	{
+		if (empty($credentials['access_token'])) {
+			return false;
+		}
+		$expiry = $this->GetExpiryTimestamp($credentials);
+		if ($expiry) {
+			// Test if expiry hasn't passed.
+			return $expiry > time();
+		}
 
-  /**
-   * Get the expiry of a given credential, or false if none is found.
-   *
-   * @param array $credentials the credentials, including access_token, timestamp and expires_in
-   * @return int|boolean utc timestamp if exists or false if none found
-   */
-  private function GetExpiryTimestamp(array $credentials)
-  {
-    if (empty($credentials['timestamp']) || empty($credentials['expires_in'])) {
-      return false;
-    }
+		// No expiry information, assume valid.
+		return true;
+	}
 
-    // Set to refreshed time.
-    $expires = intval($credentials['timestamp']);
+	/**
+	 * Tests if the access token is about to expire or has expired.
+	 *
+	 * @param array $credentials the credentials, including access_token, timestamp and expires_in
+	 * @return boolean true if the token has expired
+	 *
+	 */
+	public function IsAccessTokenExpiring(array $credentials)
+	{
+		$expiry = $this->GetExpiryTimestamp($credentials);
+		if ($expiry) {
+			// Subtract the refresh buffer.
+			$expiry -= self::REFRESH_BUFFER;
 
-    // Add the expiry value.
-    $expires += intval($credentials['expires_in']);
+			// Test if expiry has passed.
+			return $expiry < time();
+		}
 
-    return $expires;
-  }
+		return false;
+	}
 
-  /**
-   * Determines if the access token can be refreshed.
-   *
-   * @param array $credentials the credentials
-   * @return boolean true if the credentials can be refreshed
-   */
-  public function CanRefreshAccessToken(array $credentials)
-  {
-    return !empty($credentials['refresh_token']);
-  }
+	/**
+	 * Get the expiry of a given credential, or false if none is found.
+	 *
+	 * @param array $credentials the credentials, including access_token, timestamp and expires_in
+	 * @return int|boolean utc timestamp if exists or false if none found
+	 */
+	private function GetExpiryTimestamp(array $credentials)
+	{
+		if (empty($credentials['timestamp']) || empty($credentials['expires_in'])) {
+			return false;
+		}
 
-  /**
-   * Refreshes the access token.
-   *
-   * @param array $credentials the credentials, including the client_id, client_secret, refresh_token
-   * @return array the credentials
-   * @see https://developers.google.com/accounts/docs/OAuth2WebServer#offline
-   */
-  public abstract function RefreshAccessToken(array $credentials);
+		// Set to refreshed time.
+		$expires = intval($credentials['timestamp']);
 
-  /**
-   * Formats OAuth2 credentials for use in a URL.
-   * For example: access_token=token.
-   *
-   * @param array $credentials the OAuth2 credentials
-   * @return string the credentials formatted for use in a URL
-   */
-  public function FormatCredentialsForUrl($credentials)
-  {
-    if (empty($credentials['access_token'])) {
-      throw new OAuth2Exception('access_token required.');
-    }
-    $params = array('access_token' => $credentials['access_token']);
-    return http_build_query($params, null, '&');
-  }
+		// Add the expiry value.
+		$expires += intval($credentials['expires_in']);
 
-  /**
-   * Formats OAuth2 credentials for use in an HTTP header.
-   * For example: Bearer token
-   *
-   * @param array $credentials the OAuth2 credentials
-   * @return string the credentials formatted for use in an HTTP header
-   */
-  public function FormatCredentialsForHeader($credentials)
-  {
-    if (empty($credentials['access_token'])) {
-      throw new OAuth2Exception('access_token required.');
-    }
-    $tokenType = !empty($credentials['token_type']) ? $credentials['token_type'] : 'Bearer';
-    return sprintf('%s %s', $tokenType, urlencode($credentials['access_token']));
-  }
+		return $expires;
+	}
 
-  /**
-   * Gets the authorization endpoint using the given server and parameters.
-   *
-   * @param array $params the parameters to include in the endpoint
-   * @return string the authorization endpoint
-   */
-  protected function GetAuthorizeEndpoint($params = null)
-  {
-    return $this->GetEndpoint(self::AUTHORIZE_ENDPOINT, $params);
-  }
+	/**
+	 * Determines if the access token can be refreshed.
+	 *
+	 * @param array $credentials the credentials
+	 * @return boolean true if the credentials can be refreshed
+	 */
+	public function CanRefreshAccessToken(array $credentials)
+	{
+		return !empty($credentials['refresh_token']);
+	}
 
-  /**
-   * Gets the access endpoint using the given server and parameters.
-   *
-   * @param array $params the parameters to include in the endpoint
-   * @return string the access endpoint
-   */
-  protected function GetAccessEndpoint($params = null)
-  {
-    return $this->GetEndpoint(self::ACCESS_ENDPOINT, $params);
-  }
+	/**
+	 * Refreshes the access token.
+	 *
+	 * @param array $credentials the credentials, including the client_id, client_secret, refresh_token
+	 * @return array the credentials
+	 * @see https://developers.google.com/accounts/docs/OAuth2WebServer#offline
+	 */
+	public abstract function RefreshAccessToken(array $credentials);
 
-  /**
-   * Gets an endpoint using the given server and parameters.
-   *
-   * @param string $endpoint the base endpoint URL to use
-   * @param array $params the parameters to include in the endpoint
-   * @return string the endpoint
-   */
-  private function GetEndpoint($endpoint, $params = null)
-  {
-    $endpoint = UrlUtils::AddParamsToUrl($endpoint, $params);
-    if (!empty($this->server)) {
-      $endpoint = UrlUtils::ReplaceServerInUrl($endpoint, $this->server);
-    }
-    return $endpoint;
-  }
+	/**
+	 * Formats OAuth2 credentials for use in a URL.
+	 * For example: access_token=token.
+	 *
+	 * @param array $credentials the OAuth2 credentials
+	 * @return string the credentials formatted for use in a URL
+	 */
+	public function FormatCredentialsForUrl($credentials)
+	{
+		if (empty($credentials['access_token'])) {
+			throw new OAuth2Exception('access_token required.');
+		}
+		$params = array(
+			'access_token' => $credentials['access_token']
+		);
+		return http_build_query($params, null, '&');
+	}
+
+	/**
+	 * Formats OAuth2 credentials for use in an HTTP header.
+	 * For example: Bearer token
+	 *
+	 * @param array $credentials the OAuth2 credentials
+	 * @return string the credentials formatted for use in an HTTP header
+	 */
+	public function FormatCredentialsForHeader($credentials)
+	{
+		if (empty($credentials['access_token'])) {
+			throw new OAuth2Exception('access_token required.');
+		}
+		$tokenType = !empty($credentials['token_type']) ? $credentials['token_type'] : 'Bearer';
+		return sprintf('%s %s', $tokenType, urlencode($credentials['access_token']));
+	}
+
+	/**
+	 * Gets the authorization endpoint using the given server and parameters.
+	 *
+	 * @param array $params the parameters to include in the endpoint
+	 * @return string the authorization endpoint
+	 */
+	protected function GetAuthorizeEndpoint($params = null)
+	{
+		return $this->GetEndpoint(self::AUTHORIZE_ENDPOINT, $params);
+	}
+
+	/**
+	 * Gets the access endpoint using the given server and parameters.
+	 *
+	 * @param array $params the parameters to include in the endpoint
+	 * @return string the access endpoint
+	 */
+	protected function GetAccessEndpoint($params = null)
+	{
+		return $this->GetEndpoint(self::ACCESS_ENDPOINT, $params);
+	}
+
+	/**
+	 * Gets an endpoint using the given server and parameters.
+	 *
+	 * @param string $endpoint the base endpoint URL to use
+	 * @param array $params the parameters to include in the endpoint
+	 * @return string the endpoint
+	 */
+	private function GetEndpoint($endpoint, $params = null)
+	{
+		$endpoint = UrlUtils::AddParamsToUrl($endpoint, $params);
+		if (!empty($this->server)) {
+			$endpoint = UrlUtils::ReplaceServerInUrl($endpoint, $this->server);
+		}
+		return $endpoint;
+	}
 }

@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace GAds\Util;
 
 /**
@@ -25,56 +24,60 @@ namespace GAds\Util;
 class ErrorUtils
 {
 
-  private static $API_EXCEPTION_FIELD_NAME = 'ApiExceptionFault';
-  private static $OPERATION_INDEX_OGNL_REGEX = '/^operations\[(\d+)\]/';
+	private static $API_EXCEPTION_FIELD_NAME = 'ApiExceptionFault';
 
-  /**
-   * The ErrorUtils class is not meant to have any instances.
-   */
-  private function __construct() {}
+	private static $OPERATION_INDEX_OGNL_REGEX = '/^operations\[(\d+)\]/';
 
-  /**
-   * Gets the ApiErrors in the SOAP fault, if any.
-   *
-   * @param SoapFault $fault the SOAP fault to extract errors from
-   * @return array the ApiErrors in the SOAP fault, or an empty array if there were none
-   */
-  public static function GetApiErrors(SoapFault $fault)
-  {
-    $results = array();
-    if (isset($fault->detail)) {
-      foreach (get_object_vars($fault->detail) as $fieldName => $fieldValue) {
-        if ($fieldName == ErrorUtils::$API_EXCEPTION_FIELD_NAME) {
-          $errors = $fieldValue->errors;
-          if (!is_array($errors)) {
-            $errors = array($errors);
-          }
-          foreach ($errors as $error) {
-            if ($error instanceof SoapVar) {
-              $error = $error->enc_value;
-            }
-            $results[] = $error;
-          }
-        }
-      }
-    }
-    return $results;
-  }
+	/**
+	 * The ErrorUtils class is not meant to have any instances.
+	 */
+	private function __construct()
+	{}
 
-  /**
-   * Gets the index of the operation that was the source of an error.
-   *
-   * @param mixed $error the error returned in the response
-   * @return int the index of the operation that caused the error, or null if no operation was referenced by the error
-   */
-  public static function GetSourceOperationIndex($error)
-  {
-    $matches = array();
-    if (preg_match(ErrorUtils::$OPERATION_INDEX_OGNL_REGEX, $error->fieldPath, $matches)) {
-      return $matches[1];
-    } else {
-      // Invalid fieldPath.
-      return null;
-    }
-  }
+	/**
+	 * Gets the ApiErrors in the SOAP fault, if any.
+	 *
+	 * @param SoapFault $fault the SOAP fault to extract errors from
+	 * @return array the ApiErrors in the SOAP fault, or an empty array if there were none
+	 */
+	public static function GetApiErrors(\SoapFault $fault)
+	{
+		$results = array();
+		if (isset($fault->detail)) {
+			foreach (get_object_vars($fault->detail) as $fieldName => $fieldValue) {
+				if ($fieldName == ErrorUtils::$API_EXCEPTION_FIELD_NAME) {
+					$errors = $fieldValue->errors;
+					if (!is_array($errors)) {
+						$errors = array(
+							$errors
+						);
+					}
+					foreach ($errors as $error) {
+						if ($error instanceof \SoapVar) {
+							$error = $error->enc_value;
+						}
+						$results[] = $error;
+					}
+				}
+			}
+		}
+		return $results;
+	}
+
+	/**
+	 * Gets the index of the operation that was the source of an error.
+	 *
+	 * @param mixed $error the error returned in the response
+	 * @return int the index of the operation that caused the error, or null if no operation was referenced by the error
+	 */
+	public static function GetSourceOperationIndex($error)
+	{
+		$matches = array();
+		if (preg_match(ErrorUtils::$OPERATION_INDEX_OGNL_REGEX, $error->fieldPath, $matches)) {
+			return $matches[1];
+		} else {
+			// Invalid fieldPath.
+			return null;
+		}
+	}
 }
