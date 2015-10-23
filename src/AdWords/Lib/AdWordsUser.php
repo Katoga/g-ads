@@ -78,7 +78,7 @@ class AdWordsUser extends AdsUser
 		parent::__construct();
 
 		$buildIniAw = parse_ini_file(dirname(__FILE__) . '/build.ini', false);
-		$buildIniCommon = parse_ini_file(dirname(__FILE__) . '/../../Common/Lib/build.ini', false);
+		$buildIniCommon = parse_ini_file(dirname(__FILE__) . '/../../Lib/build.ini', false);
 		$this->libName = $buildIniAw['LIB_NAME'];
 		$this->libVersion = $buildIniCommon['LIB_VERSION'];
 
@@ -156,7 +156,6 @@ class AdWordsUser extends AdsUser
 	 * Gets the service by its service name and group.
 	 *
 	 * @param string $serviceName the service name
-	 * @param string $version the version of the service to get. If <var>null</var>, then the default version will be used
 	 * @param string $server the server to make the request to. If <var>null</var>, then the default server will be used
 	 * @param SoapClientFactory $serviceFactory the factory to create the client. If <var>null</var>, then the built-in SOAP client factory will be used
 	 * @param bool $validateOnly if the service should be created in validateOnly mode
@@ -164,19 +163,16 @@ class AdWordsUser extends AdsUser
 	 * @return SoapClient the instantiated service
 	 * @throws ServiceException if an error occurred when getting the service
 	 */
-	public function GetService($serviceName, $version = null, $server = null, SoapClientFactory $serviceFactory = null, $validateOnly = null, $partialFailure = null)
+	public function GetService($serviceName, $server = null, SoapClientFactory $serviceFactory = null, $validateOnly = null, $partialFailure = null)
 	{
 		$this->ValidateUser();
 		if ($serviceFactory === null) {
-			if ($version === null) {
-				$version = $this->GetDefaultVersion();
-			}
 
 			if ($server === null) {
 				$server = $this->GetDefaultServer();
 			}
 
-			$serviceFactory = new AdWordsSoapClientFactory($this, $version, $server, $validateOnly, $partialFailure);
+			$serviceFactory = new AdWordsSoapClientFactory($this, $server, $validateOnly, $partialFailure);
 		}
 
 		return parent::GetServiceSoapClient($serviceName, $serviceFactory);

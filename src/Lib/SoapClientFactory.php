@@ -25,16 +25,14 @@ abstract class SoapClientFactory
 {
 
 	/**
-	 * The minimum PHP version that can properly decode HTTP 1.1 chunked
-	 * responses.
-	 * We use 5.4.0 because some versions of 5.3.x work and some do
-	 * not.
+	 * The minimum PHP version that can properly decode HTTP 1.1 chunked responses.
+	 * We use 5.4.0 because some versions of 5.3.x work and some do not.
 	 */
 	const MIN_VER_CHUNKED_HTTP11 = '5.4.0';
 
-	private $user;
+	const VERSION = 'v201509';
 
-	private $version;
+	private $user;
 
 	private $server;
 
@@ -50,14 +48,12 @@ abstract class SoapClientFactory
 	 * The constructor called by any sub-class.
 	 *
 	 * @param AdsUser $user the user which the client will use for credentials
-	 * @param string $version the version to generate clients for
 	 * @param string $server the server to generate clients for
 	 * @param string $productName the product name (i.e. adwords)
 	 */
-	protected function __construct(AdsUser $user, $version, $server, $productName, $headerOverrides = null)
+	protected function __construct(AdsUser $user, $server, $productName, $headerOverrides = null)
 	{
 		$this->user = $user;
-		$this->version = $version;
 		$this->server = $server;
 		$this->productName = $productName;
 		$this->headerOverrides = $headerOverrides;
@@ -204,7 +200,7 @@ abstract class SoapClientFactory
 	 */
 	public function GetVersion()
 	{
-		return $this->version;
+		return self::VERSION;
 	}
 
 	/**
