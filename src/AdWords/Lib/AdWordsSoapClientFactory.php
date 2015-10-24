@@ -47,17 +47,4 @@ class AdWordsSoapClientFactory extends SoapClientFactory
 		}
 		parent::__construct($user, $server, 'adwords', $headerOverrides);
 	}
-
-	/**
-	 * Initiates a require_once for the service.
-	 *
-	 * @param string $serviceName the service to instantiate
-	 */
-	public function DoRequireOnce($serviceName)
-	{
-		require_once implode("/", array(
-			dirname(__DIR__),
-			$serviceName . '.php'
-		));
-	}
 }
