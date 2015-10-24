@@ -21,7 +21,7 @@ namespace GAds\Util;
  *
  * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
-class ErrorUtils
+class Error
 {
 
 	private static $API_EXCEPTION_FIELD_NAME = 'ApiExceptionFault';
@@ -45,7 +45,7 @@ class ErrorUtils
 		$results = array();
 		if (isset($fault->detail)) {
 			foreach (get_object_vars($fault->detail) as $fieldName => $fieldValue) {
-				if ($fieldName == ErrorUtils::$API_EXCEPTION_FIELD_NAME) {
+				if ($fieldName == Error::$API_EXCEPTION_FIELD_NAME) {
 					$errors = $fieldValue->errors;
 					if (!is_array($errors)) {
 						$errors = array(
@@ -73,7 +73,7 @@ class ErrorUtils
 	public static function GetSourceOperationIndex($error)
 	{
 		$matches = array();
-		if (preg_match(ErrorUtils::$OPERATION_INDEX_OGNL_REGEX, $error->fieldPath, $matches)) {
+		if (preg_match(Error::$OPERATION_INDEX_OGNL_REGEX, $error->fieldPath, $matches)) {
 			return $matches[1];
 		} else {
 			// Invalid fieldPath.

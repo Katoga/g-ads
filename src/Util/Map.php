@@ -21,7 +21,7 @@ namespace GAds\Util;
  *
  * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
-class MapUtils
+class Map
 {
 
 	/**

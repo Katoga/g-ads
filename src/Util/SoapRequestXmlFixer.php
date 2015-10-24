@@ -16,6 +16,8 @@
  */
 namespace GAds\Util;
 
+use GAds\Util\Xml as XmlUtils;
+
 /**
  * The SOAP XML request fixer used to fix some inconsistencies among the different
  * versions of the PHP SoapClient.
@@ -94,7 +96,7 @@ class SoapRequestXmlFixer
 			$i = 0;
 			foreach ($objects as $object) {
 				$this->FixXmlNode($nodeList->item($i), $object, $xpath);
-				$i ++;
+				$i++;
 			}
 		}
 	}
@@ -133,10 +135,9 @@ class SoapRequestXmlFixer
 
 					if (is_array($varValue)) {
 						$this->FixXmlNodes($nodeList, $varValue, $xpath);
-					} else
-						if ($nodeList->length == 1) {
-							$this->FixXmlNode($nodeList->item(0), $varValue, $xpath);
-						}
+					} elseif ($nodeList->length == 1) {
+						$this->FixXmlNode($nodeList->item(0), $varValue, $xpath);
+					}
 				}
 			}
 		}
@@ -173,7 +174,7 @@ class SoapRequestXmlFixer
 		$referencedElements = $xpath->query('//*[@id="' . $id . '"]');
 		if ($referencedElements->length > 0) {
 			$referencedElement = $referencedElements->item(0);
-			for ($i = 0; $i < $referencedElement->childNodes->length; $i ++) {
+			for ($i = 0; $i < $referencedElement->childNodes->length; $i++) {
 				$childNode = $referencedElement->childNodes->item($i);
 				$elementReference->appendChild($childNode->cloneNode(true));
 			}
@@ -189,7 +190,7 @@ class SoapRequestXmlFixer
 	private function RemoveIdAttributes(\DOMXPath $xpath)
 	{
 		$elements = $xpath->query('//*[@id]');
-		for ($i = 0; $i < $elements->length; $i ++) {
+		for ($i = 0; $i < $elements->length; $i++) {
 			$element = $elements->item($i);
 			$element->removeAttribute('id');
 		}

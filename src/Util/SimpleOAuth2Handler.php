@@ -16,6 +16,8 @@
  */
 namespace GAds\Util;
 
+use GAds\Util\Curl as CurlUtils;
+
 /**
  * A simple OAuth 2.0 handler.
  *

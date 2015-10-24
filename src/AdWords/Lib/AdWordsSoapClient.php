@@ -131,7 +131,7 @@ class AdWordsSoapClient extends AdsSoapClient
 			}
 
 			if ($operatorString != '{') {
-				$operatorString = substr($operatorString, 0, - 2);
+				$operatorString = substr($operatorString, 0, -2);
 			}
 
 			return $operatorString . '}';

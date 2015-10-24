@@ -21,7 +21,7 @@ namespace GAds\Util;
  *
  * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
-class OgnlUtils
+class Ognl
 {
 
 	/**
@@ -62,13 +62,12 @@ class OgnlUtils
 				foreach ($matches as $field) {
 					if (is_object($context) && property_exists($context, $field)) {
 						$context = $context->$field;
-					} else
-						if (is_array($context) && array_key_exists($field, $context)) {
-							$context = $context[$field];
-						} else {
-							// Field doesn't evaluate in the context.
-							return null;
-						}
+					} elseif (is_array($context) && array_key_exists($field, $context)) {
+						$context = $context[$field];
+					} else {
+						// Field doesn't evaluate in the context.
+						return null;
+					}
 				}
 			} else {
 				// Invalid expression.

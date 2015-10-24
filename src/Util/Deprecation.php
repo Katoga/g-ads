@@ -23,7 +23,7 @@ use GAds\Lib\ServiceException;
  *
  * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
-abstract class DeprecationUtils
+abstract class Deprecation
 {
 
 	/**

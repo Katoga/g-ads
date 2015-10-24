@@ -16,6 +16,8 @@
  */
 namespace GAds\Util;
 
+use GAds\Util\Url as UrlUtils;
+
 /**
  * An abstract class for Google OAuth2 flow.
  *

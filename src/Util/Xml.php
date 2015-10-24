@@ -16,12 +16,14 @@
  */
 namespace GAds\Util;
 
+use GAds\Util\Map as MapUtils;
+
 /**
  * A collection of utility methods for working with XML.
  *
  * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
-class XmlUtils
+class Xml
 {
 
 	/**
@@ -101,7 +103,7 @@ class XmlUtils
 		$result = array();
 		if ($element->hasChildNodes()) {
 			$numChildNodes = $element->childNodes->length;
-			for ($i = 0; $i < $numChildNodes; $i ++) {
+			for ($i = 0; $i < $numChildNodes; $i++) {
 				$childNode = $element->childNodes->item($i);
 				if ($childNode instanceof \DOMElement) {
 					$name = $childNode->tagName;

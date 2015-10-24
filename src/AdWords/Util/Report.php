@@ -18,17 +18,17 @@ namespace GAds\AdWords\Util;
 
 use GAds\AdWords\Lib\AdWordsUser;
 use GAds\Lib\ServiceException;
-use GAds\Util\CurlUtils;
-use GAds\Util\DeprecationUtils;
+use GAds\Util\Curl as CurlUtils;
+use GAds\Util\Deprecation as DeprecationUtils;
 use GAds\Util\Logger;
-use GAds\Util\XmlUtils;
+use GAds\Util\Xml as XmlUtils;
 
 /**
  * A collection of utility methods for working with reports.
  *
  * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
-class ReportUtils
+class Report
 {
 
 	const MINIMUM_SKIP_COLUMN_HEADER_VERSION = "v201502";
@@ -70,12 +70,12 @@ class ReportUtils
 	 * @param string $path an optional path of the file to download the report to
 	 * @param AdWordsUser $user the user that created the ReportDefinition
 	 * @param array $options the option to use when downloading the report:
-	 *	{boolean} skipReportHeader: if report responses should skip the header row containing the report name and date range
-	 *	{boolean} skipColumnHeader: if report responses should skip the header row containing column names
-	 *	{boolean} skipReportSummary: if report responses should skip the summary row containing totals
-	 *	{boolean} includeZeroImpressions: if report responses should include zero impression rows
-	 *	{string} server: the server to make the request to. If <var>null</var>, then the default server will be used
-	 *	{string} version: the version to make the request against. If <var>null</var>, then the default version will be used
+	 *        {boolean} skipReportHeader: if report responses should skip the header row containing the report name and date range
+	 *        {boolean} skipColumnHeader: if report responses should skip the header row containing column names
+	 *        {boolean} skipReportSummary: if report responses should skip the summary row containing totals
+	 *        {boolean} includeZeroImpressions: if report responses should include zero impression rows
+	 *        {string} server: the server to make the request to. If <var>null</var>, then the default server will be used
+	 *        {string} version: the version to make the request against. If <var>null</var>, then the default version will be used
 	 * @return mixed if path isn't specified the contents of the report, otherwise the size in bytes of the downloaded report
 	 */
 	public static function DownloadReport($reportDefinition, $path = null, AdWordsUser $user, array $options = null)
@@ -96,8 +96,8 @@ class ReportUtils
 	 * @param AdWordsUser $user the user to retrieve report with
 	 * @param string $reportFormat: the report format to request
 	 * @param array $options the option to use when downloading the report:
-	 *	{string} server: the server to make the request to. If <var>null</var>, then the default server will be used
-	 *	{string} version: the version to make the request against. If <var>null</var>, then the default version will be used
+	 *        {string} server: the server to make the request to. If <var>null</var>, then the default server will be used
+	 *        {string} version: the version to make the request against. If <var>null</var>, then the default version will be used
 	 * @return mixed if path isn't specified the contents of the report, otherwise the size in bytes of the downloaded report
 	 */
 	public static function DownloadReportWithAwql($reportQuery, $path = null, AdWordsUser $user, $reportFormat, array $options = null)
@@ -174,28 +174,24 @@ class ReportUtils
 					$errorMessage .= sprintf("Type = '%s', Trigger = '%s', FieldPath = '%s'. ", $apiError->type, $apiError->trigger, $apiError->fieldPath);
 				}
 				$exception = new ReportDownloadException($errorMessage, $code);
-			} else
-				if (preg_match(self::$ERROR_MESSAGE_REGEX, $snippet, $matches)) {
-					$exception = new ReportDownloadException($matches[2], $code);
-				} else
-					if (!empty($error)) {
-						$exception = new ReportDownloadException($error);
-					} else
-						if (isset($code)) {
-							$exception = new ReportDownloadException('Report download failed.', $code);
-						}
+			} elseif (preg_match(self::$ERROR_MESSAGE_REGEX, $snippet, $matches)) {
+				$exception = new ReportDownloadException($matches[2], $code);
+			} elseif (!empty($error)) {
+				$exception = new ReportDownloadException($error);
+			} elseif (isset($code)) {
+				$exception = new ReportDownloadException('Report download failed.', $code);
+			}
 		}
 
 		self::LogRequest($request, $code, $params, $exception);
 
 		if (isset($exception)) {
 			throw $exception;
-		} else
-			if (isset($path)) {
-				return $downloadSize;
-			} else {
-				return $response;
-			}
+		} elseif (isset($path)) {
+			return $downloadSize;
+		} else {
+			return $response;
+		}
 	}
 
 	/**

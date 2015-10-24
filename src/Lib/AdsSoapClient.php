@@ -16,11 +16,11 @@
  */
 namespace GAds\Lib;
 
+use DOMException;
 use GAds\Util\Logger;
 use GAds\Util\MapUtils;
 use GAds\Util\SoapRequestXmlFixer;
 use GAds\Util\XmlUtils;
-use DOMException;
 
 /**
  * An extension of the {@link SoapClient} class intended to prepare the XML before
@@ -577,7 +577,7 @@ abstract class AdsSoapClient extends \SoapClient
 	 *
 	 * @param string $type the type of object to create
 	 * @param array $params parameters to pass into the constructor, as either
-	 *        	flat array in the correct order for the constructor or as an associative array from parameter name to value
+	 *        flat array in the correct order for the constructor or as an associative array from parameter name to value
 	 * @return mixed a new instance of a class that represents that type
 	 */
 	public function Create($type, $params = null)
