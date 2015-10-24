@@ -17,11 +17,11 @@
 namespace GAds\AdWords\Lib;
 
 use GAds\AdWords\Util\Helper;
-use GAds\AdWords\Util\ReportUtils;
+use GAds\AdWords\Util\Report as ReportUtils;
 use GAds\Lib\AdsUser;
 use GAds\Lib\SoapClientFactory;
 use GAds\Lib\ValidationException;
-use GAds\Util\ApiPropertiesUtils;
+use GAds\Util\ApiProperties as ApiPropertiesUtils;
 use GAds\Util\Logger;
 
 /**

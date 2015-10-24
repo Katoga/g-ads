@@ -18,9 +18,9 @@ namespace GAds\Lib;
 
 use DOMException;
 use GAds\Util\Logger;
-use GAds\Util\MapUtils;
+use GAds\Util\Map as MapUtils;
 use GAds\Util\SoapRequestXmlFixer;
-use GAds\Util\XmlUtils;
+use GAds\Util\Xml as XmlUtils;
 
 /**
  * An extension of the {@link SoapClient} class intended to prepare the XML before
