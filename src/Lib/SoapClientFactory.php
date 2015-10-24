@@ -60,13 +60,6 @@ abstract class SoapClientFactory
 	}
 
 	/**
-	 * Initiates a require_once for the service.
-	 *
-	 * @param string $serviceName the service to instantiate
-	 */
-	abstract public function DoRequireOnce($serviceName);
-
-	/**
 	 * Generates a SOAP client for the given service name.
 	 * Generates a user level error if this instalation of PHP does not have the extension for SOAP
 	 * installed.
@@ -77,7 +70,6 @@ abstract class SoapClientFactory
 	public function GenerateSoapClient($serviceName)
 	{
 		if (extension_loaded('soap')) {
-			$this->DoRequireOnce($serviceName);
 			$soapClient = $this->GenerateServiceClient($serviceName);
 			return $soapClient;
 		} else {
