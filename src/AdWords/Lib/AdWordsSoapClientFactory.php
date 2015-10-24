@@ -56,8 +56,7 @@ class AdWordsSoapClientFactory extends SoapClientFactory
 	public function DoRequireOnce($serviceName)
 	{
 		require_once implode("/", array(
-			dirname(__FILE__),
-			'..',
+			dirname(__DIR__),
 			$serviceName . '.php'
 		));
 	}

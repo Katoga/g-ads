@@ -61,7 +61,7 @@ abstract class AdsUser
 	{
 		$this->requestHeaderElements = array();
 
-		$buildIni = parse_ini_file(dirname(__FILE__) . '/../Lib/build.ini', false);
+		$buildIni = parse_ini_file(dirname(__DIR__) . '/Lib/build.ini', false);
 		$this->libVersion = $buildIni['LIB_VERSION'];
 		$this->libName = $buildIni['LIB_NAME'];
 	}

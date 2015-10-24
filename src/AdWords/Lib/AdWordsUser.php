@@ -77,18 +77,18 @@ class AdWordsUser extends AdsUser
 	{
 		parent::__construct();
 
-		$buildIniAw = parse_ini_file(dirname(__FILE__) . '/build.ini', false);
-		$buildIniCommon = parse_ini_file(dirname(__FILE__) . '/../../Lib/build.ini', false);
+		$buildIniAw = parse_ini_file(__DIR__ . '/build.ini', false);
+		$buildIniCommon = parse_ini_file(dirname(dirname(__DIR__)) . '/Lib/build.ini', false);
 		$this->libName = $buildIniAw['LIB_NAME'];
 		$this->libVersion = $buildIniCommon['LIB_VERSION'];
 
-		$apiProps = ApiPropertiesUtils::ParseApiPropertiesFile(dirname(__FILE__) . '/api.properties');
+		$apiProps = ApiPropertiesUtils::ParseApiPropertiesFile(__DIR__ . '/api.properties');
 		$versions = explode(',', $apiProps['api.versions']);
 		$defaultVersion = $versions[count($versions) - 1];
 		$defaultServer = $apiProps['api.server'];
 
 		if ($authenticationIniPath === null) {
-			$authenticationIniPath = dirname(__FILE__) . '/../auth.ini';
+			$authenticationIniPath = dirname(__DIR__) . '/auth.ini';
 		}
 		$authenticationIni = parse_ini_file(realpath($authenticationIniPath), true);
 
@@ -109,7 +109,7 @@ class AdWordsUser extends AdsUser
 		$this->SetDeveloperToken($developerToken);
 
 		if ($settingsIniPath === null) {
-			$settingsIniPath = dirname(__FILE__) . '/../settings.ini';
+			$settingsIniPath = dirname(__DIR__) . '/settings.ini';
 		}
 
 		$this->LoadSettings($settingsIniPath, $defaultVersion, $defaultServer, getcwd(), dirname(__FILE__));
