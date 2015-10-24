@@ -3,6 +3,7 @@ namespace GAds\AdWords\Util;
 
 class Helper
 {
+
 	const SERVICE_NAMESPACE = '\GAds\AdWords\Service';
 
 	/**

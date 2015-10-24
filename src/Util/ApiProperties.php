@@ -21,17 +21,17 @@ namespace GAds\Util;
  *
  * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
-class ApiPropertiesUtils
+class ApiProperties
 {
 
-  /**
-   * Parses the specified API properties file.
-   *
-   * @param string $propsFilePath the path to the API properties file to parse
-   * @return array the parsed properties
-   */
-  public static function ParseApiPropertiesFile($propsFilePath)
-  {
-    return parse_ini_file($propsFilePath);
-  }
+	/**
+	 * Parses the specified API properties file.
+	 *
+	 * @param string $propsFilePath the path to the API properties file to parse
+	 * @return array the parsed properties
+	 */
+	public static function ParseApiPropertiesFile($propsFilePath)
+	{
+		return parse_ini_file($propsFilePath);
+	}
 }
