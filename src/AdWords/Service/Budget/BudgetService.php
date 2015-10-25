@@ -16,6 +16,8 @@
  */
 namespace GAds\AdWords\Service\Budget;
 
+use GAds\AdWords\Lib\AdWordsSoapClient;
+
 /**
  * BudgetService
  *

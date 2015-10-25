@@ -16,6 +16,8 @@
  */
 namespace GAds\AdWords\Service\AccountLabel;
 
+use GAds\AdWords\Lib\AdWordsSoapClient;
+
 /**
  * AccountLabelService
  *
