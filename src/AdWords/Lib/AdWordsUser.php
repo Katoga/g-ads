@@ -16,6 +16,7 @@
  */
 namespace GAds\AdWords\Lib;
 
+use GAds\AdWords\Util\Helper;
 use GAds\AdWords\Util\ReportUtils;
 use GAds\Lib\AdsUser;
 use GAds\Lib\SoapClientFactory;
@@ -175,7 +176,7 @@ class AdWordsUser extends AdsUser
 			$serviceFactory = new AdWordsSoapClientFactory($this, $server, $validateOnly, $partialFailure);
 		}
 
-		return parent::GetServiceSoapClient($serviceName, $serviceFactory);
+		return parent::GetServiceSoapClient(Helper::GetServiceFullClassName($serviceName), $serviceFactory);
 	}
 
 	/**
