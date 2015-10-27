@@ -1,6 +1,8 @@
-vendor
+# Composer
+/vendor
+/composer.lock
 
-# eclipse
-.project
-.buildpath
-.settings
+# Eclipse
+/.project
+/.buildpath
+/.settings
