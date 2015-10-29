@@ -19,8 +19,7 @@ namespace GAds\AdWords\Service\BudgetOrder;
 /**
  * A page of {@link BudgetOrder}s from {@link BudgetOrderService#get} method.
  *
- * @package Google_Api_Ads_AdWords_v201509
- * @subpackage v201509
+ * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 class BudgetOrderPage extends Page
 {

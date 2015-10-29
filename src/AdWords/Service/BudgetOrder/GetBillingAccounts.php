@@ -21,8 +21,7 @@ namespace GAds\AdWords\Service\BudgetOrder;
  *
  * @return A list of {@link BillingAccount}s.
  * @throws ApiException
- * @package Google_Api_Ads_AdWords_v201509
- * @subpackage v201509
+ * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 class GetBillingAccounts
 {
